@@ -1,6 +1,9 @@
 {
-  "name": "sisukes-vercel",
+  "name": "sukeset2025",
   "version": "1.0.0",
-  "main": "api/sendWA.js",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {}
 }
