@@ -1,0 +1,6 @@
+{
+  "name": "sisukes-vercel",
+  "version": "1.0.0",
+  "main": "api/sendWA.js",
+  "type": "module"
+}
