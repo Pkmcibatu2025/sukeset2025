@@ -1,31 +1,34 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
 
   try {
     const { to, message } = req.body;
     if (!to || !message) {
-      return res.status(400).json({ error: 'Missing "to" or "message"' });
+      return res.status(400).json({ success: false, message: 'Missing parameters' });
     }
 
-    const API_URL = `https://api.ultramsg.com/instance147110/messages/chat`;
-    const TOKEN = `wua31zhq6nph3x2j`;
+    // === UltraMsg Config ===
+    const INSTANCE = 'instance147110';
+    const TOKEN = 'wua31zhq6nph3x2j';
+    const url = `https://api.ultramsg.com/${INSTANCE}/messages/chat`;
 
-    const sendRes = await fetch(API_URL, {
+    const payload = { to, body: message };
+    const result = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        token: TOKEN,
-        to,
-        body: message
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${TOKEN}`,
+      },
+      body: JSON.stringify(payload),
     });
 
-    const data = await sendRes.json();
-    res.status(200).json({ success: true, ultramsg: data });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: err.message });
+    const data = await result.json();
+    return res.status(200).json({ success: true, data });
+
+  } catch (error) {
+    console.error('Error sending WA:', error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 }
